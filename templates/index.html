@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="es-MX">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diccionario de Antónimos</title>
+      <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f5f7fa;
+            color: #ffffff;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            color: #4A90E2;
+            margin-top: 20px;
+        }
+
+        .container {
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 90%;
+            max-width: 800px;
+            margin: 20px 0;
+        }
+
+        label {
+            font-size: 1.1em;
+            color: #4A90E2;
+        }
+
+        textarea, input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            margin-top: 10px;
+            resize: none;
+            background-color: #e8f0fe; /* Color de fondo para el textarea */
+            color: #989898;
+        }
+
+        textarea:focus, input[type="text"]:focus {
+            outline: none;
+            border-color: #4A90E2;
+            box-shadow: 0 0 5px rgba(74, 144, 226, 0.5);
+        }
+
+        button {
+            background-color: #4A90E2;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #357ABD;
+        }
+
+        .table-container {
+            margin-top: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #4A90E2;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f3f4f6; /* Color de fondo para filas pares */
+        }
+
+        tr:nth-child(odd) {
+            background-color: #ffffff; /* Color de fondo para filas impares */
+        }
+
+        tr:hover {
+            background-color: #e2e6ea; /* Color de fondo para filas al pasar el cursor */
+        }
+
+        td {
+            color: #333333; /* Color del texto en las celdas */
+        }
+    </style>
+</head>
+<script>
+    function clearResults() {
+        document.querySelector('textarea[name="code"]').value = "";
+        const tbodies = document.querySelectorAll("table tbody");
+        tbodies.forEach(tbody => {
+            while (tbody.firstChild) {
+                tbody.removeChild(tbody.firstChild);
+            }
+        });
+    }
+</script>
+<body>
+    <h1>Diccionario de Antónimos</h1>
+    <div class="container">
+        <form action="/analyze" method="POST">
+            <label for="code">Ingresa las palabras:</label><br>
+            <textarea name="code" id="code" rows="10" cols="50" required>{{ code if code else '' }}</textarea>
+            <br><br>
+            <button type="submit">Verificar</button>
+        </form>
+        
+        {% if results %}
+            <div class="table-container">
+                <h2>Resultados</h2>
+                <table border="1">
+                    <thead>
+                        <tr>
+                            <th>Token</th>
+                            <th>Antónimo</th>
+                            <th>Dígito</th>
+                            <th>Símbolo</th>
+                            <th>Línea</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for token in results %}
+                            <tr>
+                                <td>{{ token.value }}</td>
+                                <td>{{ token.antónimo }}</td>
+                                <td>{{ token.dígito }}</td>
+                                <td>{{ token.símbolo }}</td>
+                                <td>{{ token.line }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>
